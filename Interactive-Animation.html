@@ -1,18 +1,19 @@
 <!doctype html>
 <html lang='en'>
 <head>
-	<title>Balloon Fun</title>
+    <title>Balloon Fun</title>
 <style>
 canvas {
-	border: 0px solid black;
-}	
+    border: 0px solid black;
+}   
 </style>
 <script>
-/*TO DO
+/*TO DO for final
 Add background music
-Fix animation to balloons
 Add animation to pump
 Add animation to text--title screen with button to start?
+Create pattern for grass (custom art to tile)
+Add gradients to balloons for light
 */
 
 var canvas;
@@ -22,70 +23,43 @@ var timer;
 var timerTwo;
 var shapes = [];
 var balloonShapes = ['regular', 'star', 'longBal', 'heart', 'mickey'];
-var pumpTimer;
+//var title = 'Balloon Fun';
+//var pumpTimer;
 
 function init() {
         canvas = document.getElementById('canvas');
         context = canvas.getContext('2d');
- 	//making a responsive canvas
+    //making a responsive canvas
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('orientationchange', resizeCanvas, false);
         resizeCanvas();
-		canvas.onclick = function(event) {
-			handleClick(event.clientX, event.clientY);
-		};
-		timer = setInterval(resizeCanvas, 20);
-		timerTwo = setInterval(newShape, 2000);
-        pumpTimer = setInterval(Pump, 2000);
+        canvas.onclick = function(event) {
+            handleClick(event.clientX, event.clientY);
+        };
+        timer = setInterval(resizeCanvas, 20);
+        timerTwo = setInterval(newShape, 2000);
+        //pumpTimer = setInterval(Pump, 2000);
       }
 
 function newShape() {
-	var x = Math.random() * canvas.width;
-	var y = Math.random() * canvas.height;
-    var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 250, 105, 0.8)', 'rgba(255, 154, 66, 0.8)'];
-	var color = colors[Math.floor(Math.random()*colors.length)];
-	shapes.push(new Shape(x, y, color));	
-	}
-
-function Shape(x, y, color) {
-		this.x = canvas.width-400;
-		this.y = canvas.height-28;
-		this.size = 6;
-		this.dx = Math.random()*4-2;
-		this.dy = Math.random()*1-2;
-		this.color = color;
-		this.shape = balloonShapes[Math.floor(Math.random()*balloonShapes.length)];
-	  }
-
-//add two separate functions like the two above to handle the pump animation and shape
-
-var handle = function() {
-    var pumpFill = context.createLinearGradient(canvas.width-100,canvas.height-50,canvas.width-120,canvas.height-150);
-    pumpFill.addColorStop(1, "#cccccc");
-    pumpFill.addColorStop(0, "#666666");
-    context.beginPath();
-    context.moveTo(canvas.width-100, canvas.height-155);
-    context.lineTo(canvas.width-70, canvas.height-155);
-    context.lineTo(canvas.width-70, canvas.height-165);
-    context.lineTo(canvas.width-150, canvas.height-165);
-    context.lineTo(canvas.width-150, canvas.height-155);
-    context.lineTo(canvas.width-100, canvas.height-155);
-    context.strokeStyle="4d4d4d";
-    context.fillStyle=pumpFill;
-    context.stroke();
-    context.fill();
-}
-
-function Pump(){
-    //handle.x = x;
-    //handle.y = y;
-    handle.dy = 2;
-    for (var i=0; i<30; i++){
-        handle();
-        handle.dy++;
+    var x = Math.random() * canvas.width;
+    var y = Math.random() * canvas.height;
+    var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 154, 66, 0.8)'];
+    var color = colors[Math.floor(Math.random()*colors.length)];
+    shapes.push(new Shape(x, y, color));    
     }
 
-}
+function Shape(x, y, color) {
+        this.x = canvas.width-400;
+        this.y = canvas.height-28;
+        this.size = 6;
+        this.dx = Math.random()*4-2;
+        this.dy = Math.random()*1-2;
+        this.color = color;
+        this.shape = balloonShapes[Math.floor(Math.random()*balloonShapes.length)];
+      }
+
+//add two separate functions like the two above to handle the pump animation and shape
 
 function degreesToRadians(degrees) {
     return (degrees * Math.PI)/180;
@@ -103,7 +77,7 @@ function drawBackground() {
 //work on this part after adding separate animation functions
 //needs relative drawing
 function drawPump() {
-	var pumpFill = context.createLinearGradient(canvas.width-100,canvas.height-50,canvas.width-120,canvas.height-150);
+    var pumpFill = context.createLinearGradient(canvas.width-100,canvas.height-50,canvas.width-120,canvas.height-150);
     pumpFill.addColorStop(1, "#cccccc");
     pumpFill.addColorStop(0, "#666666");
     //non-animated part
@@ -121,6 +95,17 @@ function drawPump() {
     context.stroke();
     context.fill();
     //drawing the handle, animated later
+    context.beginPath();
+    context.moveTo(canvas.width-100, canvas.height-155);
+    context.lineTo(canvas.width-70, canvas.height-155);
+    context.lineTo(canvas.width-70, canvas.height-165);
+    context.lineTo(canvas.width-150, canvas.height-165);
+    context.lineTo(canvas.width-150, canvas.height-155);
+    context.lineTo(canvas.width-100, canvas.height-155);
+    context.strokeStyle="4d4d4d";
+    context.fillStyle=pumpFill;
+    context.stroke();
+    context.fill();
     //drawing the inner part of base, animated later
     context.beginPath();
     context.moveTo(canvas.width-105, canvas.height-155);
@@ -147,38 +132,33 @@ function drawCord(){
 function drawGround(){
         context.globalCompositeOperation='source-over';
         context.beginPath();
-        context.moveTo(canvas.width, canvas.height);
-        context.lineTo(canvas.width, canvas.height-50);
-        context.lineTo(0, canvas.height-50);
-        context.lineTo(0, canvas.height);
-        context.lineTo(canvas.width, canvas.height);
-        context.fillStyle="#00664c";
+        context.rect(0, canvas.height-50, canvas.width, canvas.height);
+        var image = document.createElement('img');
+        image.src = 'grass.png';
+        var pattern = context.createPattern(image, 'repeat');
+        context.fillStyle = pattern;
         context.fill();
-        /*lines for walls--fix later
-        context.fillStyle='#d2a679';
-        context.beginPath();
-        context.moveTo(450, 400);
-        context.lineTo(450, 0);
-        context.lineTo(500, 0);
-        context.lineTo(500, 450);
-        context.lineTo(450, 400);
-        context.fill();
-        //second wall
-        context.beginPath();
-        context.moveTo(50, 400);
-        context.lineTo(50, 0);
-        context.lineTo(0, 0);
-        context.lineTo(0, 450);
-        context.lineTo(50, 400);
-        context.fill(); */
     }
 
-//animated regular balloon shape
+function drawSun(){
+    context.globalCompositeOperation='source-over';
+    context.beginPath();
+    //context.moveTo(20, 20);
+    context.arc(40, 40, 60, degreesToRadians(360), degreesToRadians(0), false);
+    context.fillStyle='#ffeea1';
+    var rays = context.createRadialGradient(40, 40, 60, 40, 40, 140);
+    rays.addColorStop(0, '#fff3bf');
+    rays.addColorStop(1, 'rgba(255, 255, 214, 0.1');
+    context.fill();
+    context.arc(40, 40, 140, degreesToRadians(360), degreesToRadians(0), false);
+    context.fillStyle = rays;
+    context.fill();
+}
+
+//draw regular balloon 
 function drawRegular(regular){
     context.beginPath();
     context.lineJoin = 'miter';
-    //x= 100, y = 422 in original
-    //canvas width = 500, canvas height = 450
     context.moveTo(regular.x, regular.y);
     context.bezierCurveTo(regular.x-100, regular.y-222, regular.x+200, regular.y-122, regular.x, regular.y);
     //drawing the tie of the balloon
@@ -189,17 +169,9 @@ function drawRegular(regular){
     context.closePath();
     context.fillStyle=regular.color;
     context.fill();
-    /*drawing the highlight
-    //change later to white translucent -- rgba(?,?,?, 0.2)
-    //context.fillStyle='white';
-    context.moveTo(regular.x+10, regular.y-72);
-    context.lineTo(regular.x+10, regular.y-64);
-    context.lineTo(regular.x+14, regular.y-68);
-    context.lineTo(regular.x+14, regular.y-72);
-    context.lineTo(regular.x+10, regular.y=72);
-    context.fill(); */
 }
 
+//draw star balloon
 function drawStar(star) {
     context.beginPath();
     context.fillStyle=star.color;
@@ -225,6 +197,7 @@ function drawStar(star) {
     context.fill();
 }
 
+//draw oblong balloon
 function drawLong(longBal) {
     context.beginPath();
     context.fillStyle=longBal.color;
@@ -239,6 +212,7 @@ function drawLong(longBal) {
     context.fill();
 }
 
+//draw heart balloon
 function drawHeart(heart) {
     context.beginPath();
     context.fillStyle=heart.color;
@@ -257,6 +231,7 @@ function drawHeart(heart) {
     context.fill();
 }
 
+//draw mickey balloon
 function drawMickey(mickey){
     context.beginPath();
     context.fillStyle=mickey.color;
@@ -275,48 +250,62 @@ function drawMickey(mickey){
     context.fill();
 }
 
+//attempt to animate text
+/*function MakeText (x, y) {
+    this.x = canvas.width/2;
+    this.y = y;
+    this.dx = 0;
+    this.dy = Math.random()*1-2;
+} */
+
 function drawText(){
-    context.beginPath();
+    //MakeText(title.x, title.y);
+    this.y = 50;
+    this.dy = 20;
+    //context.beginPath();
+    //context.moveTo(x, y);
     context.font = '24pt Helvetica Neue';
     context.fillStyle = 'black';
-    context.textAlign = 'center';
-    context.fillText('Balloon Fun!', canvas.width/2, canvas.height/6);
+    //context.textAlign = 'center';
+    context.fillText('Balloon Fun!', (canvas.width/2)-100, this.y);
     }
 
 function resizeCanvas() {
         canvas.width = window.innerWidth-20;
         canvas.height = window.innerHeight-20;
         //redraw all static elements
-		drawBackground();
+        drawBackground();
         drawGround();
+        drawSun();
         drawCord();
         drawPump();
         drawText();
-		for (var i=0; i<shapes.length; i++) {
-			if (shapes[i].shape == 'regular') {
-				drawRegular(shapes[i]);
-			} else if (shapes[i].shape == 'star') {
-				drawStar(shapes[i]);
-			} else if (shapes[i].shape == 'longBal') {
-				drawLong(shapes[i]);
-			} else if (shapes[i].shape == 'heart') {
-				drawHeart(shapes[i]);
-			} else if (shapes[i].shape == 'mickey') {
-				drawMickey(shapes[i]);
-			}
+        for (var i=0; i<shapes.length; i++) {
+            if (shapes[i].shape == 'regular') {
+                drawRegular(shapes[i]);
+            } else if (shapes[i].shape == 'star') {
+                drawStar(shapes[i]);
+            } else if (shapes[i].shape == 'longBal') {
+                drawLong(shapes[i]);
+            } else if (shapes[i].shape == 'heart') {
+                drawHeart(shapes[i]);
+            } else if (shapes[i].shape == 'mickey') {
+                drawMickey(shapes[i]);
+            }
             //animation
-			if (shapes[i].y + shapes[i].dy > 0)
-				shapes[i].x += shapes[i].dx;
-				shapes[i].y += shapes[i].dy;
+            if (shapes[i].y + shapes[i].dy > 0)
+                shapes[i].x += shapes[i].dx;
+                shapes[i].y += shapes[i].dy;
                 //shapes[i].size++;
-		}		 
+
+        }                
       }
 
 window.onload = init;
 </script>
 </head>
 <body>
-	<canvas id='canvas' width='500' height='450'></canvas>
+    <canvas id='canvas' width='500' height='450'></canvas>
     <audio controls autoplay loop>
         <source src='guitarmusic.mp3' type='audio/mp3'>
     </audio>
