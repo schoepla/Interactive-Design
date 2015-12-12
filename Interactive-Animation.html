@@ -33,22 +33,29 @@ function init() {
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('orientationchange', resizeCanvas, false);
         resizeCanvas();
-        canvas.onclick = function(event) {
-            handleClick(event.clientX, event.clientY);
-        };
+
+        canvas.onclick = function() {
+            //handleClick(event.clientX, event.clientY);
+            var x = Math.random() * canvas.width;
+        var y = Math.random() * canvas.height;
+        var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 154, 66, 0.8)'];
+        var color = colors[Math.floor(Math.random()*colors.length)];
+        shapes.push(new Shape(x, y, color));    
+            };
+
         timer = setInterval(resizeCanvas, 20);
-        timerTwo = setInterval(newShape, 2000);
+        //timerTwo = setInterval(newShape, 2000);
         //pumpTimer = setInterval(Pump, 2000);
       }
 
-function newShape() {
+/*function newShape() {
     var x = Math.random() * canvas.width;
     var y = Math.random() * canvas.height;
     var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 154, 66, 0.8)'];
     var color = colors[Math.floor(Math.random()*colors.length)];
     shapes.push(new Shape(x, y, color));    
     }
-
+*/
 function Shape(x, y, color) {
         this.x = canvas.width-400;
         this.y = canvas.height-28;
@@ -305,9 +312,13 @@ window.onload = init;
 </script>
 </head>
 <body>
+<<<<<<< HEAD
     <canvas id='canvas' width='500' height='450'></canvas>
     <audio controls autoplay loop>
         <source src='guitarmusic.mp3' type='audio/mp3'>
     </audio>
+=======
+	<canvas id='canvas' width='500' height='450'></canvas>
+>>>>>>> parent of 6287396... Added BG music
 </body>
 </html>
