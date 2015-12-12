@@ -6,6 +6,10 @@
 canvas {
     border: 0px solid black;
 }   
+
+audio { 
+   display:none;
+}
 </style>
 <script>
 /*TO DO for final
@@ -26,6 +30,24 @@ var balloonShapes = ['regular', 'star', 'longBal', 'heart', 'mickey'];
 //var title = 'Balloon Fun';
 //var pumpTimer;
 
+var handle = document.createElement('button');
+
+//adding keyboard interaction
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
+function keyDownHandler(e) {
+    //when up arrow key is pressed down
+    if(e.keyCode == 38) {
+        keyDownHandler.called = true;
+    }
+}
+function keyUpHandler(e) {
+    //when up arrow key is released
+    if(e.keyCode == 38) {
+        keyUpHandler.called = true;
+    }
+}
+
 function init() {
         canvas = document.getElementById('canvas');
         context = canvas.getContext('2d');
@@ -33,21 +55,23 @@ function init() {
         window.addEventListener('resize', resizeCanvas, false);
         window.addEventListener('orientationchange', resizeCanvas, false);
         resizeCanvas();
-
-        canvas.onclick = function() {
-            //handleClick(event.clientX, event.clientY);
-            var x = Math.random() * canvas.width;
+    
+    //adding mouse interaction: balloon generation
+    canvas.onclick = function() {
+        //handleClick(event.clientX, event.clientY);
+        var x = Math.random() * canvas.width;
         var y = Math.random() * canvas.height;
         var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 154, 66, 0.8)'];
         var color = colors[Math.floor(Math.random()*colors.length)];
         shapes.push(new Shape(x, y, color));    
-            };
+        };
 
-        timer = setInterval(resizeCanvas, 20);
+    timer = setInterval(resizeCanvas, 20);
         //timerTwo = setInterval(newShape, 2000);
         //pumpTimer = setInterval(Pump, 2000);
       }
 
+//old balloon generation function use here
 /*function newShape() {
     var x = Math.random() * canvas.width;
     var y = Math.random() * canvas.height;
@@ -59,11 +83,14 @@ function init() {
 function Shape(x, y, color) {
         this.x = canvas.width-400;
         this.y = canvas.height-28;
-        this.size = 6;
+        this.size = 0;
         this.dx = Math.random()*4-2;
         this.dy = Math.random()*1-2;
         this.color = color;
         this.shape = balloonShapes[Math.floor(Math.random()*balloonShapes.length)];
+        this.popBalloon = function(){
+            this.color = 'rgba(0,0,0,0.0)';
+        }
       }
 
 //add two separate functions like the two above to handle the pump animation and shape
@@ -101,7 +128,7 @@ function drawPump() {
     context.lineWidth=2;
     context.stroke();
     context.fill();
-    //drawing the handle, animated later
+    //drawing the handle
     context.beginPath();
     context.moveTo(canvas.width-100, canvas.height-155);
     context.lineTo(canvas.width-70, canvas.height-155);
@@ -113,7 +140,7 @@ function drawPump() {
     context.fillStyle=pumpFill;
     context.stroke();
     context.fill();
-    //drawing the inner part of base, animated later
+    //drawing the inner part of base
     context.beginPath();
     context.moveTo(canvas.width-105, canvas.height-155);
     context.lineTo(canvas.width-105, canvas.height-150);
@@ -223,12 +250,12 @@ function drawLong(longBal) {
 function drawHeart(heart) {
     context.beginPath();
     context.fillStyle=heart.color;
-    context.moveTo(heart.x-50, heart.y-80);
-    context.lineTo(heart.x, heart.y);
-    context.lineTo(heart.x+45, heart.y-80);
-    context.arc(heart.x+20, heart.y-80, heart.size*4, degreesToRadians(180), degreesToRadians(0), false);
+    context.moveTo(heart.x-50+heart.size, heart.y-80+heart.size);
+    context.lineTo(heart.x+heart.size, heart.y+heart.size);
+    context.lineTo(heart.x+45+heart.size, heart.y-80+heart.size);
+    context.arc(heart.x+20, heart.y-80, heart.size+24, degreesToRadians(180), degreesToRadians(0), false);
     context.moveTo(heart.x-25, heart.y-80);
-    context.arc(heart.x-25, heart.y-80, heart.size*4, degreesToRadians(180), degreesToRadians(0), false);
+    context.arc(heart.x-25, heart.y-80, heart.size+24, degreesToRadians(180), degreesToRadians(0), false);
     //drawing the tie of the balloon
     context.moveTo(heart.x, heart.y);
     context.lineTo(heart.x+4, heart.y+8);
@@ -304,11 +331,25 @@ function resizeCanvas() {
                 shapes[i].x += shapes[i].dx;
                 shapes[i].y += shapes[i].dy;
                 //shapes[i].size++;
+            //up arrow key animation
+            if (keyUpHandler.called == 1 && keyDownHandler.called == 1 && shapes[i].shape == 'heart'){
+                for (var j=0; j<10; j++){
+                    shapes[i].size ++;
+                    }
+                //pop animation    
+                if (shapes[i].size >=150){
+                    shapes[i].size = 0;
+                    shapes[i].popBalloon();
+                }
 
-        }                
+                
+            }
+        } 
+              
       }
 
 window.onload = init;
+
 </script>
 </head>
 <body>
@@ -316,6 +357,5 @@ window.onload = init;
     <audio controls autoplay loop>
         <source src='guitarmusic.mp3' type='audio/mp3'>
     </audio>
-	<canvas id='canvas' width='500' height='450'></canvas>
 </body>
 </html>
