@@ -356,16 +356,28 @@ function drawTitle(){
     //issue with loading the image up front
     context.globalCompositeOperation='source-over';
     context.beginPath();
-    var title = new Image();
+    var title = document.createElement('img');
+    title.height = canvas.height/3;
     title.src = "Balloon-Fun.svg";
+    title.style.margin = "0 auto";
+    //var center = title.width/2;
+    //title.x = canvas.width/2+center;
     context.fillStyle = context.createPattern(title, "no-repeat");
+    //context.moveTo(title.x, 50);
     context.rect(0, 0, canvas.width, canvas.height);
     context.fill();
+
+    function drawInstr(){
+    context.globalCompositeOperation='source-over';
+    var text = 'Click anywhere on the screen to generate a new balloon.\nPress the up arrow key to make the balloon pop!';
+    context.font = '1em Arial';
+    context.fillStyle = 'black';
+    context.fillText(text, 0, 150);
+    }
+    drawInstr();
 }
 
-
-
-function drawBG() {
+function drawBG(){
     //issue with loading the image up front
     context.globalCompositeOperation='source-over';
     context.beginPath();
@@ -375,6 +387,7 @@ function drawBG() {
     context.rect(0, 0, canvas.width, canvas.height);
     context.fill();
 }
+
 
 </script>
 </head>
