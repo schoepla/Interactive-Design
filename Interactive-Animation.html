@@ -6,17 +6,16 @@
 canvas {
     border: 0px solid black;
 }   
-
 audio { 
    display:none;
 }
 </style>
 <script>
-/*TO DO for final
-Add background music
+/*TO DO
+Fix pop animation and counter
+Add title screen with start button and instructions
 Add animation to pump
 Add animation to text--title screen with button to start?
-Create pattern for grass (custom art to tile)
 Add gradients to balloons for light
 */
 
@@ -27,24 +26,24 @@ var timer;
 var timerTwo;
 var shapes = [];
 var balloonShapes = ['regular', 'star', 'longBal', 'heart', 'mickey'];
-//var title = 'Balloon Fun';
 //var pumpTimer;
 
-var handle = document.createElement('button');
+//var handle = document.createElement('button');
 
 //adding keyboard interaction
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
+var pressed = false;
 function keyDownHandler(e) {
     //when up arrow key is pressed down
     if(e.keyCode == 38) {
-        keyDownHandler.called = true;
+        
     }
 }
 function keyUpHandler(e) {
     //when up arrow key is released
     if(e.keyCode == 38) {
-        keyUpHandler.called = true;
+        pressed = true;
     }
 }
 
@@ -56,9 +55,8 @@ function init() {
         window.addEventListener('orientationchange', resizeCanvas, false);
         resizeCanvas();
     
-    //adding mouse interaction: balloon generation
+    //adding mouse interaction for balloon generation
     canvas.onclick = function() {
-        //handleClick(event.clientX, event.clientY);
         var x = Math.random() * canvas.width;
         var y = Math.random() * canvas.height;
         var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 154, 66, 0.8)'];
@@ -67,19 +65,9 @@ function init() {
         };
 
     timer = setInterval(resizeCanvas, 20);
-        //timerTwo = setInterval(newShape, 2000);
         //pumpTimer = setInterval(Pump, 2000);
       }
 
-//old balloon generation function use here
-/*function newShape() {
-    var x = Math.random() * canvas.width;
-    var y = Math.random() * canvas.height;
-    var colors = ['rgba(232, 77, 77, 0.8)', 'rgba(77, 232, 232, 0.8)', 'rgba(155, 232, 77, 0.8)','rgba(154, 77, 232, 0.8)', 'rgba(255, 154, 66, 0.8)'];
-    var color = colors[Math.floor(Math.random()*colors.length)];
-    shapes.push(new Shape(x, y, color));    
-    }
-*/
 function Shape(x, y, color) {
         this.x = canvas.width-400;
         this.y = canvas.height-28;
@@ -110,6 +98,8 @@ function drawBackground() {
 
 //work on this part after adding separate animation functions
 //needs relative drawing
+
+
 function drawPump() {
     var pumpFill = context.createLinearGradient(canvas.width-100,canvas.height-50,canvas.width-120,canvas.height-150);
     pumpFill.addColorStop(1, "#cccccc");
@@ -254,7 +244,7 @@ function drawHeart(heart) {
     context.lineTo(heart.x+heart.size, heart.y+heart.size);
     context.lineTo(heart.x+45+heart.size, heart.y-80+heart.size);
     context.arc(heart.x+20, heart.y-80, heart.size+24, degreesToRadians(180), degreesToRadians(0), false);
-    context.moveTo(heart.x-25, heart.y-80);
+    context.moveTo(heart.x-25+heart.size, heart.y-80+heart.size);
     context.arc(heart.x-25, heart.y-80, heart.size+24, degreesToRadians(180), degreesToRadians(0), false);
     //drawing the tie of the balloon
     context.moveTo(heart.x, heart.y);
@@ -292,17 +282,6 @@ function drawMickey(mickey){
     this.dy = Math.random()*1-2;
 } */
 
-function drawText(){
-    //MakeText(title.x, title.y);
-    this.y = 50;
-    this.dy = 20;
-    //context.beginPath();
-    //context.moveTo(x, y);
-    context.font = '24pt Helvetica Neue';
-    context.fillStyle = 'black';
-    //context.textAlign = 'center';
-    context.fillText('Balloon Fun!', (canvas.width/2)-100, this.y);
-    }
 
 function resizeCanvas() {
         canvas.width = window.innerWidth-20;
@@ -313,7 +292,7 @@ function resizeCanvas() {
         drawSun();
         drawCord();
         drawPump();
-        drawText();
+        //drawText();
         for (var i=0; i<shapes.length; i++) {
             if (shapes[i].shape == 'regular') {
                 drawRegular(shapes[i]);
@@ -332,23 +311,70 @@ function resizeCanvas() {
                 shapes[i].y += shapes[i].dy;
                 //shapes[i].size++;
             //up arrow key animation
-            if (keyUpHandler.called == 1 && keyDownHandler.called == 1 && shapes[i].shape == 'heart'){
-                for (var j=0; j<10; j++){
+            if (pressed == true && shapes[i].shape == 'heart'){
+                for (var j=0; j<5; j++){
                     shapes[i].size ++;
+                    //pop animation    
+                    if (shapes[i].size >=150){
+                        shapes[i].size = 0;
+                        shapes[i].popBalloon();
+                        }
                     }
-                //pop animation    
-                if (shapes[i].size >=150){
-                    shapes[i].size = 0;
-                    shapes[i].popBalloon();
-                }
-
-                
             }
         } 
-              
       }
+//change this to show title screen first
+window.onload = function(){
+    opener();
+    //clearRect(0, 0, canvas.width, canvas.height);
+    //init();
+}
 
-window.onload = init;
+
+
+
+
+//title screen
+function opener(){
+    canvas = document.getElementById('canvas');
+    context = canvas.getContext('2d');
+    //making a responsive canvas
+    window.addEventListener('resize', respCanvas, false);
+    window.addEventListener('orientationchange', respCanvas, false);
+    respCanvas();
+}
+
+function respCanvas(){
+    canvas.width = window.innerWidth-20;
+    canvas.height = window.innerHeight-20;
+    //call other draw functions/animations here
+    drawBG();
+    drawTitle();
+    }
+
+function drawTitle(){
+    //issue with loading the image up front
+    context.globalCompositeOperation='source-over';
+    context.beginPath();
+    var title = new Image();
+    title.src = "Balloon-Fun.svg";
+    context.fillStyle = context.createPattern(title, "no-repeat");
+    context.rect(0, 0, canvas.width, canvas.height);
+    context.fill();
+}
+
+
+
+function drawBG() {
+    //issue with loading the image up front
+    context.globalCompositeOperation='source-over';
+    context.beginPath();
+    var bg = new Image();
+    bg.src = "Balloon-BG.png";
+    context.fillStyle = context.createPattern(bg, "repeat");
+    context.rect(0, 0, canvas.width, canvas.height);
+    context.fill();
+}
 
 </script>
 </head>
