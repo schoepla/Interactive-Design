@@ -9,11 +9,17 @@ canvas {
 audio { 
    display:none;
 }
+
+img {
+    background-repeat: repeat-y;
+    display:none;
+}
 </style>
 <script>
 /*TO DO
 Fix pop animation and counter
-Add title screen with start button and instructions
+Create a start anim button function
+Make start button wipe screen and go to init function
 Add animation to pump
 Add animation to text--title screen with button to start?
 Add gradients to balloons for light
@@ -341,7 +347,7 @@ function opener(){
     //making a responsive canvas
     window.addEventListener('resize', respCanvas, false);
     window.addEventListener('orientationchange', respCanvas, false);
-    respCanvas();
+    window.onload = respCanvas();
 }
 
 function respCanvas(){
@@ -350,23 +356,21 @@ function respCanvas(){
     //call other draw functions/animations here
     drawBG();
     drawTitle();
+    startButton();
     }
 
+//drawing the title
 function drawTitle(){
-    //issue with loading the image up front
     context.globalCompositeOperation='source-over';
     context.beginPath();
-    var title = document.createElement('img');
-    title.height = canvas.height/3;
+    var title = new Image();
     title.src = "Balloon-Fun.svg";
-    title.style.margin = "0 auto";
-    //var center = title.width/2;
-    //title.x = canvas.width/2+center;
+    title.style.align = 'center';
     context.fillStyle = context.createPattern(title, "no-repeat");
-    //context.moveTo(title.x, 50);
     context.rect(0, 0, canvas.width, canvas.height);
     context.fill();
 
+    //drawing the instructions on title screen
     function drawInstr(){
     context.globalCompositeOperation='source-over';
     var text = 'Click anywhere on the screen to generate a new balloon.\nPress the up arrow key to make the balloon pop!';
@@ -377,18 +381,30 @@ function drawTitle(){
     drawInstr();
 }
 
+//background image
 function drawBG(){
-    //issue with loading the image up front
     context.globalCompositeOperation='source-over';
     context.beginPath();
-    var bg = new Image();
-    bg.src = "Balloon-BG.png";
+    var bg = document.getElementById('bg');
     context.fillStyle = context.createPattern(bg, "repeat");
     context.rect(0, 0, canvas.width, canvas.height);
     context.fill();
 }
 
+//button that starts animation
+function startButton(){
+    context.globalCompositeOperation='source-over';
 
+}
+
+
+
+
+//will clear start screen and call new animation function init
+function wipeAway(){
+    context.clearRect(0,0,canvas.width,canvas.height);
+    init();
+}
 </script>
 </head>
 <body>
@@ -396,5 +412,7 @@ function drawBG(){
     <audio controls autoplay loop>
         <source src='guitarmusic.mp3' type='audio/mp3'>
     </audio>
+    <img id='bg' src= 'Balloon-BG.png'></img>
+    <img id='title' type='img' src='Balloon-Fun.svg' display='none'></img>
 </body>
 </html>
