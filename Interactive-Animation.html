@@ -330,10 +330,12 @@ function resizeCanvas() {
         } 
       }
 //change this to show title screen first
-window.onload = function(){
+window.onload = play;
+
+
+function play(){
     opener();
-    //clearRect(0, 0, canvas.width, canvas.height);
-    //init();
+    setTimeout(init, 5100);
 }
 
 
@@ -348,6 +350,7 @@ function opener(){
     window.addEventListener('resize', respCanvas, false);
     window.addEventListener('orientationchange', respCanvas, false);
     window.onload = respCanvas();
+
 }
 
 function respCanvas(){
@@ -356,7 +359,7 @@ function respCanvas(){
     //call other draw functions/animations here
     drawBG();
     drawTitle();
-    startButton();
+    //startButton();
     }
 
 //drawing the title
@@ -365,9 +368,8 @@ function drawTitle(){
     context.beginPath();
     var title = new Image();
     title.src = "Balloon-Fun.svg";
-    title.style.align = 'center';
     context.fillStyle = context.createPattern(title, "no-repeat");
-    context.rect(0, 0, canvas.width, canvas.height);
+    context.rect(0, 0, title.width, title.height);
     context.fill();
 
     //drawing the instructions on title screen
@@ -391,19 +393,19 @@ function drawBG(){
     context.fill();
 }
 
-//button that starts animation
 function startButton(){
     context.globalCompositeOperation='source-over';
-
-}
-
+    context.beginPath();
+    var btn = new Image();
+    btn.src = 'startbutton.png';
+    }
 
 
 
 //will clear start screen and call new animation function init
 function wipeAway(){
     context.clearRect(0,0,canvas.width,canvas.height);
-    init();
+    init;
 }
 </script>
 </head>
@@ -413,6 +415,7 @@ function wipeAway(){
         <source src='guitarmusic.mp3' type='audio/mp3'>
     </audio>
     <img id='bg' src= 'Balloon-BG.png'></img>
-    <img id='title' type='img' src='Balloon-Fun.svg' display='none'></img>
+    <img id='title' src='Balloon-Fun.svg' display='none'></img>
+    <img id='btn' src='startbutton.png' display='inline'></img>
 </body>
 </html>
