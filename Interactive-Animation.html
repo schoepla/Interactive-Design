@@ -190,7 +190,7 @@ function drawRegular(regular){
     context.beginPath();
     context.lineJoin = 'miter';
     context.moveTo(regular.x, regular.y);
-    context.bezierCurveTo(regular.x-100, regular.y-222, regular.x+200, regular.y-122, regular.x, regular.y);
+    context.bezierCurveTo(regular.x-100, regular.y-222, regular.x+200, regular.y-122+regular.size, regular.x, regular.y);
     //drawing the tie of the balloon
     context.moveTo(regular.x, regular.y);
     context.lineTo(regular.x+4, regular.y+8);
@@ -206,17 +206,17 @@ function drawStar(star) {
     context.beginPath();
     context.fillStyle=star.color;
     context.lineJoin = 'round';
-    context.moveTo(star.x+45, star.y-30);
-    context.lineTo(star.x+15, star.y-40);
-    context.lineTo(star.x, star.y-70);
-    context.lineTo(star.x-15, star.y-40);
-    context.lineTo(star.x-45, star.y-30);
-    context.lineTo(star.x-20, star.y-10);
-    context.lineTo(star.x-25, star.y+20);
-    context.lineTo(star.x, star.y);
-    context.lineTo(star.x+20, star.y+23);
-    context.lineTo(star.x+20, star.y-10);
-    context.lineTo(star.x+45, star.y-30);
+    context.moveTo(star.x+45+star.size, star.y-30+star.size);
+    context.lineTo(star.x+15+star.size, star.y-40+star.size);
+    context.lineTo(star.x+star.size, star.y-70+star.size);
+    context.lineTo(star.x-15+star.size, star.y-40+star.size);
+    context.lineTo(star.x-45+star.size, star.y-30+star.size);
+    context.lineTo(star.x-20+star.size, star.y-10+star.size);
+    context.lineTo(star.x-25+star.size, star.y+20+star.size);
+    context.lineTo(star.x+star.size, star.y+star.size);
+    context.lineTo(star.x+20+star.size, star.y+23+star.size);
+    context.lineTo(star.x+20+star.size, star.y-10+star.size);
+    context.lineTo(star.x+45+star.size, star.y-30+star.size);
     //drawing the tie
     context.moveTo(star.x, star.y);
     context.lineTo(star.x+4, star.y+8);
@@ -232,7 +232,7 @@ function drawLong(longBal) {
     context.beginPath();
     context.fillStyle=longBal.color;
     context.moveTo(longBal.x, longBal.y);
-    context.bezierCurveTo(longBal.x-40, longBal.y-250, longBal.x+50, longBal.y-30, longBal.x, longBal.y);
+    context.bezierCurveTo(longBal.x-40, longBal.y-250, longBal.x+50+longBal.size, longBal.y-30+longBal.size, longBal.x, longBal.y);
     //drawing the tie of the balloon
     context.moveTo(longBal.x, longBal.y);
     context.lineTo(longBal.x+4, longBal.y+8);
@@ -266,11 +266,11 @@ function drawMickey(mickey){
     context.beginPath();
     context.fillStyle=mickey.color;
     context.moveTo(mickey.x-25, mickey.y-55);
-    context.arc(mickey.x-25, mickey.y-55, mickey.size+14, degreesToRadians(360), degreesToRadians(0), false);
+    context.arc(mickey.x-25, mickey.y-55, mickey.size+14+mickey.size, degreesToRadians(360), degreesToRadians(0), false);
     context.moveTo(mickey.x+25, mickey.y-55);
-    context.arc(mickey.x+25, mickey.y-55, mickey.size+14, degreesToRadians(360), degreesToRadians(0), false);
+    context.arc(mickey.x+25, mickey.y-55, mickey.size+14+mickey.size, degreesToRadians(360), degreesToRadians(0), false);
     context.moveTo(mickey.x, mickey.y-30);
-    context.arc(mickey.x, mickey.y-30, mickey.size+24, degreesToRadians(360), degreesToRadians(0), false);
+    context.arc(mickey.x, mickey.y-30, mickey.size+24+mickey.size, degreesToRadians(360), degreesToRadians(0), false);
     //drawing the tie of the balloon
     context.moveTo(mickey.x, mickey.y);
     context.lineTo(mickey.x+4, mickey.y+8);
@@ -317,14 +317,17 @@ function resizeCanvas() {
                 shapes[i].y += shapes[i].dy;
                 //shapes[i].size++;
             //up arrow key animation
-            if (pressed == true && shapes[i].shape == 'heart'){
+            if (pressed == true){
                 for (var j=0; j<5; j++){
                     shapes[i].size ++;
                     //pop animation    
-                    if (shapes[i].size >=150){
+                    if (shapes[i].size >=130){
                         shapes[i].size = 0;
                         shapes[i].popBalloon();
+                        pressed = false;
+
                         }
+
                     }
             }
         } 
@@ -375,7 +378,7 @@ function drawTitle(){
     //drawing the instructions on title screen
     function drawInstr(){
     context.globalCompositeOperation='source-over';
-    var text = 'Click anywhere on the screen to generate a new balloon.\nPress the up arrow key to make the balloon pop!';
+    var text = 'Click anywhere on the screen to generate a new balloon. Press the up arrow key to warp the balloon until it pops!';
     context.font = '1em Arial';
     context.fillStyle = 'black';
     context.fillText(text, 0, 150);
